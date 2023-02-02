@@ -17,10 +17,10 @@ class Controller1D():
         self.kp_z = pid_gains.kp
         self.ki_z = pid_gains.ki
         self.kd_z = pid_gains.kd
-        self.prev_err = 0
         self.total_err = 0
+        self.prev_vel = 0
 
-    def compute_commands(self, setpoint, state, time_delta):
+    def compute_commands(self, setpoint, state):
         """
         Inputs:
         - setpoint (State dataclass):   the desired control setpoint
@@ -32,13 +32,11 @@ class Controller1D():
         # e(t)
         err = setpoint.z_pos - state.z_pos
         # Derivative of e(t)
-        derr_dt = (err - self.prev_err)/time_delta
+        derr_dt = setpoint.z_vel - state.z_vel
         # Integral of e(t)
-        self.total_err += err * time_delta
-
-        z_dotdot = self.kd_z * derr_dt + self.kp_z * err + self.ki_z * self.total_err
+        self.total_err += err
+        
+        z_dotdot = self.kp_z * err + self.kd_z * derr_dt + self.ki_z * self.total_err
         U = self.params.mass * (z_dotdot + self.params.g)
-
-        self.prev_err = err
 
         return U

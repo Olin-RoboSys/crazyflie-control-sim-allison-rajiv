@@ -68,7 +68,7 @@ def run_sim(args):
 
         # -------------- (THINK &) ACT -----------------------------------
         # compute thrust (i.e. u)
-        thrust = controller.compute_commands(set_point, state, time_delta)
+        thrust = controller.compute_commands(set_point, state)
         # ----------------------------------------------------------------
 
         # advance state using dynamics
