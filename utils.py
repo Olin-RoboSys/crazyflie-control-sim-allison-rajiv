@@ -26,7 +26,7 @@ class CrazyflieParams:
     g:      float = 9.81
     L:      float = 0.046
     max_angle: float = 40*math.pi/180
-    maxT:   float = 2.5*mass*g
+    maxT:   float = 100*mass*g
     minT:   float = 0.05*mass*g
 
 

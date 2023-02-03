@@ -16,10 +16,12 @@ class StateEstimator1D():
         - init_state (State dataclass):             initial state of the system
         """
 
-        # your code here
-
-        pass
-        
+        self.params = params
+        self.init_state = init_state
+        self.prev_state = self.init_state
+        self.state_var = 0
+        self.var_f = .0001
+        self.var_z = .01
 
     def compute(self, z_meas, U, time_delta):
         """
@@ -36,6 +38,17 @@ class StateEstimator1D():
         """
         filtered_state = State()
 
-        # your code here
+        curr_vel = U*time_delta + self.prev_state.z_vel
+
+        
+        mu_x = self.prev_state.z_pos + curr_vel*time_delta
+        var_x = self.state_var + self.var_f
+
+        K = (var_x)/(var_x + self.var_z)
+
+        y = z_meas - mu_x
+
+        filtered_state.z_pos = mu_x + K*y
+        self.state_var = (var_x * self.var_z)/(var_x + self.var_z)
 
         return filtered_state
