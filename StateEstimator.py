@@ -20,7 +20,7 @@ class StateEstimator1D():
         self.init_state = init_state
         self.prev_state = self.init_state
         self.state_var = 0
-        self.var_f = .0001
+        self.var_f = .01
         self.var_z = .01
 
     def compute(self, z_meas, U, time_delta):
@@ -38,10 +38,9 @@ class StateEstimator1D():
         """
         filtered_state = State()
 
-        curr_vel = U*time_delta + self.prev_state.z_vel
+        accel = U/self.params.mass - self.params.g
 
-        
-        mu_x = self.prev_state.z_pos + curr_vel*time_delta
+        mu_x = self.prev_state.z_pos + 1/2*accel*time_delta**2 + self.prev_state.z_vel*time_delta
         var_x = self.state_var + self.var_f
 
         K = (var_x)/(var_x + self.var_z)
@@ -49,6 +48,10 @@ class StateEstimator1D():
         y = z_meas - mu_x
 
         filtered_state.z_pos = mu_x + K*y
+        filtered_state.z_vel = accel*time_delta + self.prev_state.z_vel
+
         self.state_var = (var_x * self.var_z)/(var_x + self.var_z)
+
+        self.prev_state = filtered_state
 
         return filtered_state
