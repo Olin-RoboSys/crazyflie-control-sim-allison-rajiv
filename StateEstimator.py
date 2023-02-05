@@ -20,7 +20,7 @@ class StateEstimator1D():
         self.init_state = init_state
         self.prev_state = self.init_state
         self.state_var = 0
-        self.var_f = .01
+        self.var_f = .0001
         self.var_z = .01
 
     def compute(self, z_meas, U, time_delta):
